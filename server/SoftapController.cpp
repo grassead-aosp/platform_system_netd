@@ -96,9 +96,14 @@ int SoftapController::startSoftap() {
                        "-e", WIFI_ENTROPY_FILE,
                        HOSTAPD_CONF_FILE, (char *) NULL);
 
-        } else
+        } else {
             ALOGE("no specific driver vendor");
-        ALOGE("execl failed (%s)", strerror(errno));
+            ret = execl(HOSTAPD_BIN_FILE, HOSTAPD_BIN_FILE,
+                       "-e", WIFI_ENTROPY_FILE,
+                       HOSTAPD_CONF_FILE, (char *) NULL);
+        }
+        if (ret)
+            ALOGE("execl failed (%s)", strerror(errno));
         ALOGE("SoftAP failed to start");
         return ResponseCode::ServiceStartFailed;
     } else {
